@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.example.pizzacafe.PizzaCafeApplication
 import com.example.pizzacafe.databinding.FragmentMenuBinding
 import com.example.pizzacafe.presentation.ViewModelFactory
-import com.example.pizzacafe.presentation.adapters.PizzaListAdapter
+import com.example.pizzacafe.presentation.adapters.MenuItemListAdapter
 import javax.inject.Inject
 
 class MenuFragment : Fragment() {
@@ -19,7 +18,7 @@ class MenuFragment : Fragment() {
     private val binding: FragmentMenuBinding
         get() = _binding ?: throw RuntimeException("FragmentMenuBinding is null")
 
-    private lateinit var pizzaListAdapter: PizzaListAdapter
+    private lateinit var pizzaListAdapter: MenuItemListAdapter
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -49,13 +48,15 @@ class MenuFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        pizzaListAdapter = PizzaListAdapter()
+        pizzaListAdapter = MenuItemListAdapter()
         binding.recyclerView.adapter = pizzaListAdapter
-        binding.recyclerView.recycledViewPool.setMaxRecycledViews(PizzaListAdapter.PIZZA_VIEW_TYPE, 10)
+        binding.recyclerView.recycledViewPool.setMaxRecycledViews(MenuItemListAdapter.PIZZA_VIEW_TYPE, 10)
     }
 
     private fun setupObservers() {
+        viewModel.state.observe(viewLifecycleOwner) {
 
+        }
     }
 
     override fun onDestroyView() {

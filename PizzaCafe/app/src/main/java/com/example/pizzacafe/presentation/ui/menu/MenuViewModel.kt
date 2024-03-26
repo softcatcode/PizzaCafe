@@ -5,10 +5,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pizzacafe.R
+import com.example.pizzacafe.domain.useCases.GetAvailableCitiesUseCase
 import com.example.pizzacafe.domain.useCases.LoadPizzaListUseCase
+import com.example.pizzacafe.presentation.ui.state.DisplayingMenuItemsState
+import com.example.pizzacafe.presentation.ui.state.ErrorState
+import com.example.pizzacafe.presentation.ui.state.LoadingMenuItemsState
+import com.example.pizzacafe.presentation.ui.state.MenuViewModelState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,16 +32,12 @@ class MenuViewModel @Inject constructor(
 
     private var timer = Timer()
 
-    init {
-        load()
-    }
-
-    private fun processInternetError() {
+    private fun processInternetError(city: String, category: MenuSection) {
         timer = Timer().apply{
             schedule(
                 object: TimerTask() {
                     override fun run() {
-                        load()
+                        load(city, category)
                     }
                 },
                 RETRY_TIME_GAP
@@ -45,19 +45,27 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun load() {
+    private fun load(city: String, category: MenuSection) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) { _state.value = LoadingPizzaState }
+            withContext(Dispatchers.Main) {
+                _state.value = state.value?.copy(menuState = LoadingMenuItemsState)
+            }
             try {
-                val list = loadPizzaListUseCase()
-                _state.postValue(DisplayingPizzaState(list))
+                val pizzaList = loadPizzaListUseCase(city, category)
+                _state.postValue(
+                    state.value?.copy(menuState = DisplayingMenuItemsState(pizzaList))
+                )
             } catch (e: IOException) {
-                processInternetError()
+                processInternetError(city, category)
                 val msg = ContextCompat.getString(getApplication(), R.string.internet_error_message)
-                _state.postValue(ErrorMenuState(msg))
+                _state.postValue(
+                    state.value?.copy(menuState = ErrorState(msg))
+                )
             } catch (e: Exception) {
                 val msg = ContextCompat.getString(getApplication(), R.string.other_error_message)
-                _state.postValue(ErrorMenuState(msg))
+                _state.postValue(
+                    state.value?.copy(menuState = ErrorState(msg))
+                )
             }
         }
     }

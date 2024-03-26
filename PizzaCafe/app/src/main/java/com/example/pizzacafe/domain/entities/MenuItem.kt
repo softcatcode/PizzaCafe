@@ -1,6 +1,6 @@
 package com.example.pizzacafe.domain.entities
 
-data class Pizza(
+data class MenuItem(
     val name: String = "",
     val price: UInt = 0U,
     val description: String = "",
