@@ -5,6 +5,6 @@ import com.example.pizzacafe.di.DaggerApplicationComponent
 
 class PizzaCafeApplication: Application() {
     val component by lazy {
-        DaggerApplicationComponent.create()
+        DaggerApplicationComponent.factory().create(this)
     }
 }

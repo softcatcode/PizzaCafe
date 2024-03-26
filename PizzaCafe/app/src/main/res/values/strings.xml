@@ -3,4 +3,10 @@
     <string name="title_menu">Menu</string>
     <string name="title_profile">Profile</string>
     <string name="title_bucket">Bucket</string>
+    <string name="pizza_section_title">Pizza</string>
+    <string name="combo_section_title">Combo</string>
+    <string name="desserts_section_title">Desserts</string>
+    <string name="drinks_section_title">Drinks</string>
+    <string name="internet_error_message">no internet error</string>
+    <string name="other_error_message">unknown error</string>
 </resources>
