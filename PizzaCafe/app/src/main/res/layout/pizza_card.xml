@@ -21,7 +21,7 @@
             android:layout_marginEnd="2dp"/>
 
         <TextView
-            android:id="@+id/price"
+            android:id="@+id/pizza_price"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
