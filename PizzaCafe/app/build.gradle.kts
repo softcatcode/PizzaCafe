@@ -56,4 +56,8 @@ dependencies {
     // dagger
     implementation("com.google.dagger:dagger:2.51")
     kapt("com.google.dagger:dagger-compiler:2.51")
+
+    // design elements
+    implementation("androidx.appcompat:appcompat:1.6.1")
+
 }
