@@ -8,6 +8,7 @@
     tools:context=".presentation.ui.menu.MenuFragment">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:fitsSystemWindows="true"
@@ -147,12 +148,117 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/light_grey"
-            tools:listitem="@layout/pizza_card"/>
+            android:orientation="vertical">
+
+            <HorizontalScrollView
+                android:id="@+id/menu_section_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_percent="0.05"
+                app:layout_constraintTop_toTopOf="parent"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/white">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/pizza_section"
+                        android:layout_width="120dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:backgroundTint="@color/white"
+                        app:cardCornerRadius="6dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/pizza_section_title"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:background="@drawable/disabled_menu_section_label_design"
+                            android:textColor="@color/disabled_menu_section_text_color"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/combo_section"
+                        android:layout_width="120dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:backgroundTint="@color/white"
+                        app:cardCornerRadius="6dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/combo_section_title"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:background="@drawable/disabled_menu_section_label_design"
+                            android:textColor="@color/disabled_menu_section_text_color"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/desserts_section"
+                        android:layout_width="120dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:backgroundTint="@color/white"
+                        app:cardCornerRadius="6dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/desserts_section_title"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:background="@drawable/disabled_menu_section_label_design"
+                            android:textColor="@color/disabled_menu_section_text_color"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/drinks_section"
+                        android:layout_width="120dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:backgroundTint="@color/white"
+                        app:cardCornerRadius="6dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/drinks_section_title"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:background="@drawable/disabled_menu_section_label_design"
+                            android:textColor="@color/disabled_menu_section_text_color"/>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                app:layout_constraintTop_toBottomOf="@id/menu_section_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/light_grey"
+                tools:listitem="@layout/pizza_card"/>
+
+            <ProgressBar
+                android:id="@+id/pizza_list_progress_bar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/menu_section_scroll_view"
+                android:visibility="invisible"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
 
