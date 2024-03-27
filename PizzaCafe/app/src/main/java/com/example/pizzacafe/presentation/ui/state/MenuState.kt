@@ -1,20 +1,16 @@
 package com.example.pizzacafe.presentation.ui.state
 
+import com.example.pizzacafe.domain.entities.Category
 import com.example.pizzacafe.domain.entities.MenuItem
-import com.example.pizzacafe.presentation.ui.menu.MenuSection
 
-sealed class MenuState(
-    val category: MenuSection = MenuSection.Pizza
-)
+sealed class MenuState
 
-class LoadingMenuItemsState(category: MenuSection): MenuState(category)
+data object LoadingMenuItemsState : MenuState()
 
-class ErrorState(
-    val message: String = "",
-    category: MenuSection
-): MenuState(category)
+data class ErrorState(
+    val message: String = ""
+): MenuState()
 
-class DisplayingMenuItemsState(
-    val list: List<MenuItem>,
-    category: MenuSection
-): MenuState(category)
+data class DisplayingMenuItemsState(
+    val list: List<MenuItem>
+): MenuState()

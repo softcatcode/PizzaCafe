@@ -6,7 +6,7 @@ data class MenuItem(
     val name: String = "",
     val price: UInt = 0U,
     val description: String = "",
-    //val category: String = "",
+    val categoryName: String = "",
     val image: Bitmap? = null,
     val id: Int = UNDEFINED_ID,
 ) {

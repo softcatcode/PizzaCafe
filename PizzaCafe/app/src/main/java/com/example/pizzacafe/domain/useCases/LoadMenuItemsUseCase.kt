@@ -8,7 +8,7 @@ import javax.inject.Inject
 class LoadMenuItemsUseCase @Inject constructor(
     private val repository: DataLoaderInterface
 ) {
-    suspend operator fun invoke(category: MenuSection): List<MenuItem> {
+    suspend operator fun invoke(category: String): List<MenuItem> {
         return repository.getMenuItemsList(category)
     }
 }

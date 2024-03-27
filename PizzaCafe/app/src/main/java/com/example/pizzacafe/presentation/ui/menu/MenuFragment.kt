@@ -1,18 +1,16 @@
 package com.example.pizzacafe.presentation.ui.menu
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pizzacafe.PizzaCafeApplication
-import com.example.pizzacafe.R
 import com.example.pizzacafe.databinding.FragmentMenuBinding
 import com.example.pizzacafe.presentation.ViewModelFactory
+import com.example.pizzacafe.presentation.adapters.MenuCategoryAdapter
 import com.example.pizzacafe.presentation.adapters.MenuItemListAdapter
 import com.example.pizzacafe.presentation.ui.state.DisplayingMenuItemsState
 import com.example.pizzacafe.presentation.ui.state.ErrorState
@@ -26,6 +24,7 @@ class MenuFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentMenuBinding is null")
 
     private lateinit var menuAdapter: MenuItemListAdapter
+    private lateinit var categoryAdapter: MenuCategoryAdapter
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -56,27 +55,27 @@ class MenuFragment : Fragment() {
     }
 
     private fun setupRecyclerView() = with(binding) {
-        recyclerView.recycledViewPool.setMaxRecycledViews(MenuItemListAdapter.MENU_ITEM_VIEW_TYPE, 10)
+        menuRecyclerView.recycledViewPool.setMaxRecycledViews(MenuItemListAdapter.MENU_ITEM_VIEW_TYPE, 10)
+        categoryRecyclerView.recycledViewPool.setMaxRecycledViews(MenuCategoryAdapter.ENABLED_TYPE, 1)
+        categoryRecyclerView.recycledViewPool.setMaxRecycledViews(MenuCategoryAdapter.DISABLED_TYPE, 5)
         menuAdapter = MenuItemListAdapter()
-        binding.recyclerView.adapter = menuAdapter
+        categoryAdapter = MenuCategoryAdapter()
+        menuRecyclerView.adapter = menuAdapter
+        categoryRecyclerView.adapter = categoryAdapter
     }
 
     private fun setupObservers() {
         setupMenuStateObserver()
         setupToolBarStateObserver()
+        setupCategoriesObserver()
     }
 
     private fun setupMenuStateObserver() {
         viewModel.menuState.observe(viewLifecycleOwner) {
-            setCategoryHighlight(binding.pizzaSectionText, it.category == MenuSection.Pizza)
-            setCategoryHighlight(binding.comboSectionText, it.category == MenuSection.Combo)
-            setCategoryHighlight(binding.dessertsSectionText, it.category == MenuSection.Desserts)
-            setCategoryHighlight(binding.drinksSectionText, it.category == MenuSection.Drinks)
-
             if (it is LoadingMenuItemsState) {
                 binding.menuProgressBar.visibility = View.VISIBLE
                 menuAdapter.submitList(null)
-                disableCategoryClicks()
+                categoryAdapter.onClickListener = {}
             } else {
                 binding.menuProgressBar.visibility = View.INVISIBLE
                 setupCategoryClickListeners()
@@ -104,39 +103,15 @@ class MenuFragment : Fragment() {
         }
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setCategoryHighlight(textView: TextView, enabled: Boolean) {
-        val designId = when (enabled) {
-            true -> R.drawable.enabled_menu_section_label_design
-            false -> R.drawable.disabled_menu_section_label_design
+    private fun setupCategoriesObserver() {
+        viewModel.categoryState.observe(viewLifecycleOwner) {
+            categoryAdapter.submitList(it.list)
         }
-        val textColorId = when(enabled) {
-            true -> R.color.enabled_menu_section_text_color
-            false -> R.color.disabled_menu_section_text_color
-        }
-        context?.getDrawable(designId)?.let { textView.background = it }
-        context?.getColor(textColorId)?.let { textView.setTextColor(it) }
-    }
-
-    private fun disableCategoryClicks() {
-        binding.pizzaSection.setOnClickListener {}
-        binding.comboSection.setOnClickListener {}
-        binding.dessertsSection.setOnClickListener {}
-        binding.drinksSection.setOnClickListener {}
     }
 
     private fun setupCategoryClickListeners() {
-        binding.pizzaSection.setOnClickListener {
-            viewModel.loadMenu(MenuSection.Pizza)
-        }
-        binding.comboSection.setOnClickListener {
-            viewModel.loadMenu(MenuSection.Combo)
-        }
-        binding.dessertsSection.setOnClickListener {
-            viewModel.loadMenu(MenuSection.Desserts)
-        }
-        binding.drinksSection.setOnClickListener {
-            viewModel.loadMenu(MenuSection.Drinks)
+        categoryAdapter.onClickListener = {
+            viewModel.selectCategory(it)
         }
     }
 
