@@ -1,6 +1,7 @@
 package com.example.pizzacafe.di
 
 import android.app.Application
+import com.example.pizzacafe.di.modules.DataModule
 import com.example.pizzacafe.di.modules.DomainModule
 import com.example.pizzacafe.di.modules.ViewModelModule
 import com.example.pizzacafe.presentation.ui.bucket.BucketFragment
@@ -9,7 +10,7 @@ import com.example.pizzacafe.presentation.ui.profile.ProfileFragment
 import dagger.BindsInstance
 import dagger.Component
 
-@Component(modules = [ViewModelModule::class, DomainModule::class])
+@Component(modules = [ViewModelModule::class, DomainModule::class, DataModule::class])
 interface ApplicationComponent {
 
     fun inject(fragment: MenuFragment)

@@ -6,7 +6,6 @@ import com.example.pizzacafe.domain.entities.Category
 import com.example.pizzacafe.domain.entities.MenuItem
 import com.example.pizzacafe.domain.interfaces.DataLoaderInterface
 import com.example.pizzacafe.domain.interfaces.JsonMapperInterface
-import com.example.pizzacafe.presentation.ui.menu.MenuSection
 import org.json.JSONObject
 import java.net.URL
 import javax.inject.Inject
@@ -14,7 +13,6 @@ import javax.inject.Inject
 class DataLoaderImplementation @Inject constructor(
     private val mapper: JsonMapperInterface
 ): DataLoaderInterface {
-
 
     override suspend fun getMenuItemsList(category: String): List<MenuItem> {
         val text = URL(MENU_ITEMS_LINK).readText()

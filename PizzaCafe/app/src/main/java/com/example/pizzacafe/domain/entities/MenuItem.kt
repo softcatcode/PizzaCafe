@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 
 data class MenuItem(
     val name: String = "",
-    val price: UInt = 0U,
+    val price: Int = 0,
     val description: String = "",
     val categoryName: String = "",
     val image: Bitmap? = null,
