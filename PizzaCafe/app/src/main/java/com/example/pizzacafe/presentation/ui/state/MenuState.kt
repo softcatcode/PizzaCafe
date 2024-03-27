@@ -1,6 +1,5 @@
 package com.example.pizzacafe.presentation.ui.state
 
-import com.example.pizzacafe.domain.entities.Category
 import com.example.pizzacafe.domain.entities.MenuItem
 
 sealed class MenuState
