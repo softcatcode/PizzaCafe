@@ -25,26 +25,26 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintWidth_percent="0.3"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                app:layout_constraintWidth_percent="0.4"
+                style="@style/ActionBar.CitySelector">
 
                 <AutoCompleteTextView
                     android:id="@+id/city_selector_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="none"
                     android:backgroundTint="@color/white"
-                    android:textSize="14sp"/>
+                    android:inputType="none"
+                    android:textSize="16sp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
                 android:id="@+id/qr_scan_button"
                 android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
                 android:background="@color/white"
                 android:scaleType="fitXY"
@@ -63,7 +63,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
+        app:itemRippleColor="@color/navigation_bar_selected_icon_color"
+        app:itemIconTint="@drawable/navigation_bar_colors"
+        app:itemTextColor="@drawable/navigation_bar_colors"
+        android:background="@color/navigation_bar_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

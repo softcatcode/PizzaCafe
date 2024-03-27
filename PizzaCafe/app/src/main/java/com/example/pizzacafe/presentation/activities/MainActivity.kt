@@ -1,6 +1,7 @@
 package com.example.pizzacafe.presentation.activities
 
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -19,15 +20,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setupNavigationBar()
+        setupCitySelector()
+    }
+
+    private fun setupCitySelector() {
+        val cityList = mutableListOf("Moscow", "Peter", "Omsk", "Volgograd", "Other")
+        binding.citySelectorText.setText(cityList.first())
+        val citiesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, cityList)
+        binding.citySelectorText.setAdapter(citiesAdapter)
     }
 
     private fun setupNavigationBar() {
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.navigation_menu, R.id.navigation_profile, R.id.navigation_bucket)
-        )
-        //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
 }

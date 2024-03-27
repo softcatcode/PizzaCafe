@@ -8,7 +8,7 @@ import javax.inject.Inject
 class LoadPizzaListUseCase @Inject constructor(
     private val repository: DataLoaderInterface
 ) {
-    suspend operator fun invoke(city: String, category: MenuSection): List<MenuItem> {
-        return repository.getPizzaList(city, category)
+    suspend operator fun invoke(category: MenuSection): List<MenuItem> {
+        return repository.getPizzaList(category)
     }
 }

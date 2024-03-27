@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pizzacafe.R
-import com.example.pizzacafe.domain.useCases.GetAvailableCitiesUseCase
 import com.example.pizzacafe.domain.useCases.LoadPizzaListUseCase
 import com.example.pizzacafe.presentation.ui.state.DisplayingMenuItemsState
 import com.example.pizzacafe.presentation.ui.state.ErrorState
@@ -32,12 +31,12 @@ class MenuViewModel @Inject constructor(
 
     private var timer = Timer()
 
-    private fun processInternetError(city: String, category: MenuSection) {
+    private fun processInternetError(category: MenuSection) {
         timer = Timer().apply{
             schedule(
                 object: TimerTask() {
                     override fun run() {
-                        load(city, category)
+                        load(category)
                     }
                 },
                 RETRY_TIME_GAP
@@ -45,18 +44,18 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun load(city: String, category: MenuSection) {
+    private fun load(category: MenuSection) {
         viewModelScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) {
                 _state.value = state.value?.copy(menuState = LoadingMenuItemsState)
             }
             try {
-                val pizzaList = loadPizzaListUseCase(city, category)
+                val pizzaList = loadPizzaListUseCase(category)
                 _state.postValue(
                     state.value?.copy(menuState = DisplayingMenuItemsState(pizzaList))
                 )
             } catch (e: IOException) {
-                processInternetError(city, category)
+                processInternetError(category)
                 val msg = ContextCompat.getString(getApplication(), R.string.internet_error_message)
                 _state.postValue(
                     state.value?.copy(menuState = ErrorState(msg))
