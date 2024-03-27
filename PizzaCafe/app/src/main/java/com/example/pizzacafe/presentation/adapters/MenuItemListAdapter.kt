@@ -11,7 +11,7 @@ import com.example.pizzacafe.presentation.adapters.viewHolders.MenuItemViewHolde
 class MenuItemListAdapter: ListAdapter<MenuItem, MenuItemViewHolder>(MenuItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuItemViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.pizza_card, parent, false)
+            .inflate(R.layout.menu_item_card, parent, false)
         return MenuItemViewHolder(view)
     }
 
@@ -20,13 +20,14 @@ class MenuItemListAdapter: ListAdapter<MenuItem, MenuItemViewHolder>(MenuItemDif
         holder.name.text = item.name
         holder.description.text = item.description
         holder.price.text = item.price.toString()
+        holder.image.setImageBitmap(item.image)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return PIZZA_VIEW_TYPE
+        return MENU_ITEM_VIEW_TYPE
     }
 
     companion object {
-        const val PIZZA_VIEW_TYPE = 1
+        const val MENU_ITEM_VIEW_TYPE = 1
     }
 }

@@ -1,14 +1,12 @@
 package com.example.pizzacafe.presentation.ui.menu
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pizzacafe.PizzaCafeApplication
@@ -54,13 +52,13 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         setupObservers()
-        setupClickListeners()
+        setupCategoryClickListeners()
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView() = with(binding) {
+        recyclerView.recycledViewPool.setMaxRecycledViews(MenuItemListAdapter.MENU_ITEM_VIEW_TYPE, 10)
         menuAdapter = MenuItemListAdapter()
         binding.recyclerView.adapter = menuAdapter
-        binding.recyclerView.recycledViewPool.setMaxRecycledViews(MenuItemListAdapter.PIZZA_VIEW_TYPE, 10)
     }
 
     private fun setupObservers() {
@@ -75,8 +73,14 @@ class MenuFragment : Fragment() {
             setCategoryHighlight(binding.dessertsSectionText, it.category == MenuSection.Desserts)
             setCategoryHighlight(binding.drinksSectionText, it.category == MenuSection.Drinks)
 
-            binding.menuProgressBar.visibility =
-                if (it is LoadingMenuItemsState) View.VISIBLE else View.INVISIBLE
+            if (it is LoadingMenuItemsState) {
+                binding.menuProgressBar.visibility = View.VISIBLE
+                menuAdapter.submitList(null)
+                disableCategoryClicks()
+            } else {
+                binding.menuProgressBar.visibility = View.INVISIBLE
+                setupCategoryClickListeners()
+            }
             if (it is ErrorState)
                 Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
             if (it is DisplayingMenuItemsState)
@@ -114,11 +118,26 @@ class MenuFragment : Fragment() {
         context?.getColor(textColorId)?.let { textView.setTextColor(it) }
     }
 
-    private fun setupClickListeners() {
-        binding.pizzaSection.setOnClickListener { viewModel.loadMenu(MenuSection.Pizza) }
-        binding.comboSection.setOnClickListener { viewModel.loadMenu(MenuSection.Combo) }
-        binding.dessertsSection.setOnClickListener { viewModel.loadMenu(MenuSection.Desserts) }
-        binding.drinksSection.setOnClickListener { viewModel.loadMenu(MenuSection.Drinks) }
+    private fun disableCategoryClicks() {
+        binding.pizzaSection.setOnClickListener {}
+        binding.comboSection.setOnClickListener {}
+        binding.dessertsSection.setOnClickListener {}
+        binding.drinksSection.setOnClickListener {}
+    }
+
+    private fun setupCategoryClickListeners() {
+        binding.pizzaSection.setOnClickListener {
+            viewModel.loadMenu(MenuSection.Pizza)
+        }
+        binding.comboSection.setOnClickListener {
+            viewModel.loadMenu(MenuSection.Combo)
+        }
+        binding.dessertsSection.setOnClickListener {
+            viewModel.loadMenu(MenuSection.Desserts)
+        }
+        binding.drinksSection.setOnClickListener {
+            viewModel.loadMenu(MenuSection.Drinks)
+        }
     }
 
     override fun onDestroyView() {

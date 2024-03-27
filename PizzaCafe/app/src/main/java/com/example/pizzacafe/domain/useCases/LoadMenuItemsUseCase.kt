@@ -9,6 +9,6 @@ class LoadMenuItemsUseCase @Inject constructor(
     private val repository: DataLoaderInterface
 ) {
     suspend operator fun invoke(category: MenuSection): List<MenuItem> {
-        return repository.getPizzaList(category)
+        return repository.getMenuItemsList(category)
     }
 }

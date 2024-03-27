@@ -219,10 +219,13 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 app:layout_constraintTop_toBottomOf="@id/menu_section_scroll_view"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@color/light_grey"
-                tools:listitem="@layout/pizza_card"/>
+                android:visibility="visible"
+                tools:listitem="@layout/menu_item_card"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
             <ProgressBar
                 android:id="@+id/menu_progress_bar"

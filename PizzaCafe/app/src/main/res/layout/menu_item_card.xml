@@ -4,11 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:layout_marginTop="1dp">
+    android:layout_marginTop="1dp"
+    android:contextClickable="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/pizza_image"
@@ -18,7 +20,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.4"
-            android:layout_marginEnd="2dp"/>
+            android:layout_marginEnd="2dp" />
 
         <TextView
             android:id="@+id/pizza_price"
@@ -58,13 +60,13 @@
             android:id="@+id/pizza_description"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:textColor="@color/description_text_color"
-            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/pizza_image"
             app:layout_constraintTop_toBottomOf="@id/pizza_name"
-            android:layout_marginTop="2dp"
             app:layout_constraintHeight_percent="0.4"
             app:layout_constraintWidth_percent="0.5"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/description_text_color"
+            android:textSize="14sp"
             android:text="Ветчина, шампиньоны, увеличенная порция моцареллы, томатный соус"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
