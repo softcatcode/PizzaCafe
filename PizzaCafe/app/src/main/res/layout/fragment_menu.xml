@@ -113,14 +113,13 @@
             <HorizontalScrollView
                 android:id="@+id/menu_section_scroll_view"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.08"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/white">
 
                     <androidx.cardview.widget.CardView
@@ -130,6 +129,8 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:backgroundTint="@color/white"
                         app:cardCornerRadius="6dp">
                         <TextView
@@ -149,6 +150,8 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:backgroundTint="@color/white"
                         app:cardCornerRadius="6dp">
                         <TextView
@@ -168,6 +171,8 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:backgroundTint="@color/white"
                         app:cardCornerRadius="6dp">
                         <TextView
@@ -187,6 +192,8 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:backgroundTint="@color/white"
                         app:cardCornerRadius="6dp">
                         <TextView
@@ -215,6 +222,7 @@
                 android:id="@+id/pizza_list_progress_bar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_marginTop="50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/menu_section_scroll_view"
