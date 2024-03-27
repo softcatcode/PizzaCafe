@@ -1,8 +1,8 @@
 package com.example.pizzacafe.presentation.ui.state
 
-import android.media.Image
+import com.example.pizzacafe.domain.entities.Banner
 
 data class ToolBarState(
-    val firstImage: Image? = null,
-    val secondImage: Image? = null
+    val firstBanner: Banner? = null,
+    val secondBanner: Banner? = null
 )

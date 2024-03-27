@@ -7,11 +7,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pizzacafe.R
-import com.example.pizzacafe.domain.useCases.LoadPizzaListUseCase
+import com.example.pizzacafe.domain.entities.Banner
+import com.example.pizzacafe.domain.useCases.LoadBannersUseCase
+import com.example.pizzacafe.domain.useCases.LoadMenuItemsUseCase
 import com.example.pizzacafe.presentation.ui.state.DisplayingMenuItemsState
 import com.example.pizzacafe.presentation.ui.state.ErrorState
 import com.example.pizzacafe.presentation.ui.state.LoadingMenuItemsState
-import com.example.pizzacafe.presentation.ui.state.MenuViewModelState
+import com.example.pizzacafe.presentation.ui.state.MenuState
+import com.example.pizzacafe.presentation.ui.state.ToolBarState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,22 +24,32 @@ import java.util.TimerTask
 import javax.inject.Inject
 
 class MenuViewModel @Inject constructor(
-    private val loadPizzaListUseCase: LoadPizzaListUseCase,
+    private val loadMenuItemsUseCase: LoadMenuItemsUseCase,
+    private val loadBannersUseCase: LoadBannersUseCase,
     application: Application
 ): AndroidViewModel(application) {
 
-    private val _state = MutableLiveData<MenuViewModelState>()
-    val state: LiveData<MenuViewModelState>
-        get() = _state
+    private val _menuState = MutableLiveData<MenuState>()
+    val menuState: LiveData<MenuState>
+        get() = _menuState
+
+    private val _toolBarState = MutableLiveData<ToolBarState>()
+    val toolBarState: LiveData<ToolBarState>
+        get() = _toolBarState
 
     private var timer = Timer()
 
-    private fun processInternetError(category: MenuSection) {
+    init {
+        loadMenu(MenuSection.Pizza)
+        loadBanners()
+    }
+
+    private fun processMenuLoadError(category: MenuSection) {
         timer = Timer().apply{
             schedule(
                 object: TimerTask() {
                     override fun run() {
-                        load(category)
+                        loadMenu(category)
                     }
                 },
                 RETRY_TIME_GAP
@@ -44,28 +57,35 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun load(category: MenuSection) {
+    fun loadMenu(category: MenuSection) {
         viewModelScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) {
-                _state.value = state.value?.copy(menuState = LoadingMenuItemsState)
+                _menuState.value = LoadingMenuItemsState(category)
             }
             try {
-                val pizzaList = loadPizzaListUseCase(category)
-                _state.postValue(
-                    state.value?.copy(menuState = DisplayingMenuItemsState(pizzaList))
-                )
+                val pizzaList = loadMenuItemsUseCase(category)
+                _menuState.postValue(DisplayingMenuItemsState(pizzaList, category))
             } catch (e: IOException) {
-                processInternetError(category)
+                processMenuLoadError(category)
                 val msg = ContextCompat.getString(getApplication(), R.string.internet_error_message)
-                _state.postValue(
-                    state.value?.copy(menuState = ErrorState(msg))
-                )
+                _menuState.postValue(ErrorState(msg, category))
             } catch (e: Exception) {
                 val msg = ContextCompat.getString(getApplication(), R.string.other_error_message)
-                _state.postValue(
-                    state.value?.copy(menuState = ErrorState(msg))
-                )
+                _menuState.postValue(ErrorState(msg, category))
             }
+        }
+    }
+
+    private fun loadBanners() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val banners = loadBannersUseCase()
+            var first: Banner? = null
+            var second: Banner? = null
+            if (banners.isNotEmpty())
+                first = banners[0]
+            if (banners.size > 1)
+                second = banners[1]
+            _toolBarState.postValue(ToolBarState(first, second))
         }
     }
 
