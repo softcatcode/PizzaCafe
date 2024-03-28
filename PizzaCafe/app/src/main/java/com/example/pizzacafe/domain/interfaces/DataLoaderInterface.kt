@@ -7,6 +7,8 @@ import com.example.pizzacafe.domain.entities.MenuItem
 interface DataLoaderInterface {
     suspend fun getMenuItemsList(category: String): List<MenuItem>
 
+    suspend fun getAllMenuItems(): List<MenuItem>
+
     suspend fun getCategoryList(): List<Category>
 
     suspend fun getBannerList(): List<Banner>

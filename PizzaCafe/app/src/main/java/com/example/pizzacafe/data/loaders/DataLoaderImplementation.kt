@@ -31,10 +31,12 @@ class DataLoaderImplementation(
 //        connectivityManager?.registerDefaultNetworkCallback(networkCallback)
 //    }
 
-    override suspend fun getMenuItemsList(category: String): List<MenuItem> {
+    override suspend fun getMenuItemsList(category: String) = getAllMenuItems().filter { it.categoryName == category }
+
+    override suspend fun getAllMenuItems(): List<MenuItem> {
         val text = URL(MENU_ITEMS_LINK).readText()
         val data = JSONObject(text)
-        return jsonMapper.mapJsonToMenuItemsList(data).filter { it.categoryName == category }
+        return jsonMapper.mapJsonToMenuItemsList(data)
     }
 
     override suspend fun getCategoryList(): List<Category> {

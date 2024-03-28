@@ -6,6 +6,7 @@ import com.example.pizzacafe.domain.entities.MenuItem
 import com.example.pizzacafe.domain.interfaces.DataLoaderInterface
 import com.example.pizzacafe.domain.interfaces.DbModelMapperInterface
 import com.example.pizzacafe.domain.interfaces.JsonMapperInterface
+import java.io.IOException
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -20,47 +21,57 @@ class DataLoaderProxy @Inject constructor(
 
     override suspend fun getMenuItemsList(category: String): List<MenuItem> {
         val currentTime = Calendar.getInstance().timeInMillis
-        return if (currentTime - lastLoadFoodTime > FOOD_DATA_ACTUALITY_TIME_MILLIS) {
-            try {
-                val result = DataLoaderImplementation(jsonMapper).getMenuItemsList(category)
-                lastLoadFoodTime = currentTime
-                result
-            } catch (_: Exception) {
-                getFoodFromDatabase(category)
-            }
-        } else
-            getFoodFromDatabase(category)
-    }
-
-    private suspend fun getFoodFromDatabase(category: String): List<MenuItem> {
-        return foodDao.getMenuItems(category).filter {
-            it.name == category
-        }.map {
-            dbModelMapper.mapToMenuItem(it)
+        if (currentTime - lastLoadFoodTime > FOOD_DATA_ACTUALITY_TIME_MILLIS) {
+            val status = updateMenuItemsData()
+            val result = getMenuItemsFromDatabase(category)
+            if (!status && result.isEmpty())
+                throw IOException("No internet and the database does not have the data.")
+            lastLoadFoodTime = currentTime
+            return result
         }
-    }
-
-    private suspend fun getCategoriesFromDatabase(): List<Category> {
-        return foodDao.getCategories().map {
-            dbModelMapper.mapToCategory(it)
-        }
+        return getMenuItemsFromDatabase(category)
     }
 
     override suspend fun getCategoryList(): List<Category> {
         val currentTime = Calendar.getInstance().timeInMillis
-        return if (currentTime - lastLoadCategoriesTime > CATEGORIES_DATA_ACTUALITY_TIME_MILLIS) {
-            try {
-                val result = DataLoaderImplementation(jsonMapper).getCategoryList()
-                lastLoadFoodTime = currentTime
-                result
-            } catch (_: Exception) {
-                getCategoriesFromDatabase()
-            }
-        } else
-            getCategoriesFromDatabase()
+        if (currentTime - lastLoadCategoriesTime > CATEGORIES_DATA_ACTUALITY_TIME_MILLIS) {
+            val status = updateCategoriesData()
+            val result = getCategoriesFromDatabase()
+            if (!status && result.isEmpty())
+                throw IOException("No internet and the database does not have the data.")
+            lastLoadCategoriesTime = currentTime
+            return result
+        }
+        return getCategoriesFromDatabase()
     }
 
+    override suspend fun getAllMenuItems() = DataLoaderImplementation(jsonMapper).getAllMenuItems()
+
     override suspend fun getBannerList() = DataLoaderImplementation(jsonMapper).getBannerList()
+
+    private suspend inline fun getMenuItemsFromDatabase(category: String) =
+        foodDao.getMenuItems(category).map { dbModelMapper.mapToMenuItem(it) }
+
+    private suspend inline fun getCategoriesFromDatabase() =
+        foodDao.getCategories().map { dbModelMapper.mapToCategory(it) }
+
+    private suspend fun updateMenuItemsData() = try {
+        val result = getAllMenuItems()
+        for (elem in result)
+            foodDao.addMenuItem(dbModelMapper.mapMenuItemToDbModel(elem))
+        true
+    } catch (_: Exception) {
+        false
+    }
+
+    private suspend fun updateCategoriesData() = try {
+        val result = DataLoaderImplementation(jsonMapper).getCategoryList()
+        for (elem in result)
+            foodDao.addCategory(dbModelMapper.mapCategoryToDbModel(elem))
+        true
+    } catch (_: Exception) {
+        false
+    }
 
     companion object {
         private const val FOOD_DATA_ACTUALITY_TIME_MILLIS = 60000L
