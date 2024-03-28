@@ -61,7 +61,8 @@ class MenuViewModel @Inject constructor(
     }
     
     private fun resetReloadTimer() {
-        reloadingTimer.purge()
+        reloadingTimer.cancel()
+        reloadingTimer = Timer()
     }
 
     private fun processCategoriesLoadError() {

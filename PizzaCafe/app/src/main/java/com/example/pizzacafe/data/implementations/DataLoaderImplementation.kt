@@ -15,6 +15,7 @@ class DataLoaderImplementation @Inject constructor(
 ): DataLoaderInterface {
 
     override suspend fun getMenuItemsList(category: String): List<MenuItem> {
+        
         val text = URL(MENU_ITEMS_LINK).readText()
         val data = JSONObject(text)
         return mapper.mapJsonToMenuItemsList(data).filter { it.categoryName == category }
