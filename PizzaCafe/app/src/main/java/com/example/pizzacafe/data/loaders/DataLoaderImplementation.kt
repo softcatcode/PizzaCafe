@@ -1,4 +1,4 @@
-package com.example.pizzacafe.data.implementations
+package com.example.pizzacafe.data.loaders
 
 import android.graphics.BitmapFactory
 import com.example.pizzacafe.domain.entities.Banner
@@ -8,23 +8,39 @@ import com.example.pizzacafe.domain.interfaces.DataLoaderInterface
 import com.example.pizzacafe.domain.interfaces.JsonMapperInterface
 import org.json.JSONObject
 import java.net.URL
-import javax.inject.Inject
 
-class DataLoaderImplementation @Inject constructor(
-    private val mapper: JsonMapperInterface
+class DataLoaderImplementation(
+    private val jsonMapper: JsonMapperInterface
 ): DataLoaderInterface {
 
+//    private val networkCallback = object: ConnectivityManager.NetworkCallback() {
+//
+//        override fun onAvailable(network: Network) {
+//            super.onAvailable(network)
+//            isNetworkAvailable = true
+//        }
+//
+//        override fun onLost(network: Network) {
+//            super.onLost(network)
+//            isNetworkAvailable = false
+//        }
+//    }
+
+//    init {
+//        val connectivityManager = getSystemService(application, ConnectivityManager::class.java)
+//        connectivityManager?.registerDefaultNetworkCallback(networkCallback)
+//    }
+
     override suspend fun getMenuItemsList(category: String): List<MenuItem> {
-        
         val text = URL(MENU_ITEMS_LINK).readText()
         val data = JSONObject(text)
-        return mapper.mapJsonToMenuItemsList(data).filter { it.categoryName == category }
+        return jsonMapper.mapJsonToMenuItemsList(data).filter { it.categoryName == category }
     }
 
     override suspend fun getCategoryList(): List<Category> {
         val text = URL(CATEGORIES_LINK).readText()
         val data = JSONObject(text)
-        return mapper.mapJsonToCategoriesList(data)
+        return jsonMapper.mapJsonToCategoriesList(data)
     }
 
     private fun loadBanner(link: String): Banner {

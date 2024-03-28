@@ -10,4 +10,8 @@ interface DbModelMapperInterface {
     fun mapMenuItemToDbModel(item: MenuItem): MenuItemDbModel
 
     fun mapCategoryToDbModel(item: Category): CategoryDbModel
+
+    fun mapToMenuItem(item: MenuItemDbModel): MenuItem
+
+    fun mapToCategory(item: CategoryDbModel): Category
 }

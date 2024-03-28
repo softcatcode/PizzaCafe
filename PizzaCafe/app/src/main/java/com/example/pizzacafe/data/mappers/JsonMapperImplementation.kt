@@ -1,4 +1,4 @@
-package com.example.pizzacafe.data.implementations
+package com.example.pizzacafe.data.mappers
 
 import android.graphics.BitmapFactory
 import com.example.pizzacafe.domain.entities.Category
