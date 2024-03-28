@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PizzaCafe</string>
+    <string name="title_menu">Меню</string>
+    <string name="title_profile">Профиль</string>
+    <string name="title_bucket">Корзина</string>
+    <string name="pizza_section_title">Пицца</string>
+    <string name="combo_section_title">Комбо</string>
+    <string name="desserts_section_title">Десерты</string>
+    <string name="drinks_section_title">Напитки</string>
+    <string name="internet_error_message">нет интернета</string>
+    <string name="other_error_message">неизвестная ошибка</string>
+</resources>
